@@ -36,42 +36,66 @@ c11.addEventListener("click", function(){    revealCard(11); });
 var oneVisible = false;
 var turnCounter = 0;
 var visible_nr;
+var lock = false;
+var pairsLeft = 6;
 
 function revealCard(nr){
     var opacityValue = $('#c'+nr).css('opacity');
     //alert('Opacity' + opacityValue);
     
-    
-    var obraz = "url(img/" + cards[nr] + ")";
-    var rewers = "url(img/karta.png)";
-    $('#c' + nr).css('background-image', obraz);
-    
-    $('#c' + nr).addClass('cardA');
-    $('#c' + nr).removeClass('card');
+    if(opacityValue != 0 && lock == false)
+    {
+        lock = true;
+        var obraz = "url(img/" + cards[nr] + ")";
 
-    if(oneVisible == false){
-        // first card
 
-        oneVisible = true;
-        visible_nr = nr;
-    }else {
-        //second card
+        $('#c' + nr).css('background-image', obraz);
+        $('#c' + nr).addClass('cardA');
+        $('#c' + nr).removeClass('card');
 
-        if(cards[visible_nr] == cards[nr]){
+        if(oneVisible == false){
+            // first card
 
-            setTimeout(function() {hide2Cards(nr, visible_nr)}, 750);
+            oneVisible = true;
+            visible_nr = nr;
+            lock = false;
         }else {
-            $('#c' + nr).css('background-image', rewers);
-            $('#c' + visible_nr).css('background-image', rewers);
-        }
+            //second card
 
-        turnCounter++;
-        $('.score').html('Turn counter: ' + turnCounter);
-        oneVisible = false;
+            if(cards[visible_nr] == cards[nr]){
+
+                setTimeout(function() {hide2Cards(nr, visible_nr)}, 750);
+            }else {
+                setTimeout(function() {restore2Cards(nr, visible_nr)}, 1000);
+            }
+
+            turnCounter++;
+            $('.score').html('Turn counter: ' + turnCounter);
+            oneVisible = false;
+        }
     }
 }
 
 function hide2Cards(nr1, nr2){
     $('#c'+ nr1).css('opacity', '0');
     $('#c'+ nr2).css('opacity', '0');
+    lock = false;
+    pairsLeft--;
+
+    if(pairsLeft == 0 ){
+        $('.board').html('<h1> Win! <br> Done in ' + turnCounter + ' turns </h1>');
+    }
+}
+
+function restore2Cards(nr1, nr2){
+        $('#c' + nr1).css('background-image', 'url(img/karta.png)');
+        $('#c' + nr1).addClass('card');
+        $('#c' + nr1).removeClass('cardA');
+
+        $('#c' + nr2).css('background-image', 'url(img/karta.png)');
+        $('#c' + nr2).addClass('card');
+        $('#c' + nr2).removeClass('cardA');
+
+
+        lock = false;
 }
