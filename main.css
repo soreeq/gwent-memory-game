@@ -72,3 +72,11 @@ p {
 	letter-spacing: 2px;
 }
 
+.reset-button {
+	color: white;
+	background-color: #51c8b2;
+	width: 200px;
+	display: block;
+	margin: 0 auto;
+  }
+
